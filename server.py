@@ -589,6 +589,24 @@ class Handler(BaseHTTPRequestHandler):
                     _subscribers.remove(q)
 
 
+class Server(ThreadingHTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+    def handle_error(self, request, client_address):
+        """A browser hanging up mid-request is normal, not an error.
+
+        Chrome opens speculative connections and abandons them, and cancels
+        in-flight polls on navigation. The default handler prints a full stack
+        trace for each one, which looks alarming and means nothing.
+        """
+        exc = sys.exc_info()[1]
+        if isinstance(exc, (ConnectionResetError, BrokenPipeError,
+                            ConnectionAbortedError, TimeoutError)):
+            return
+        super().handle_error(request, client_address)
+
+
 def ticker():
     """Nudge clients when the season rolls over or the clock runs out."""
     while True:
@@ -630,9 +648,7 @@ def main():
         print("  ⚠  change admin_token in config.json before this goes public")
     print("")
 
-    ThreadingHTTPServer.allow_reuse_address = True
-    srv = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
-    srv.daemon_threads = True
+    srv = Server(("0.0.0.0", PORT), Handler)
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
