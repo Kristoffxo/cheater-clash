@@ -1,0 +1,6 @@
+# live data — never commit real payment records
+data/
+*.tmp
+
+# secrets
+.env

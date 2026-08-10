@@ -1,0 +1,23 @@
+{
+  "upi_id": "paiseaagye@ptyes",
+  "payee_name": "Cheat Clash",
+
+  "total_cap_rupees": 10000,
+  "side_cap_rupees": 10000,
+  "season_days": 30,
+
+  "min_amount": 1,
+  "max_amount_per_vote": 500,
+  "quick_amounts": [1, 5, 10, 25, 50, 100],
+
+  "verification": "manual",
+
+  "admin_token": "change-me-before-you-go-live",
+
+  "_notes": {
+    "total_cap_rupees": "HARD stop. Once approved payments total this, the season ends and the site stops asking anyone for money.",
+    "side_cap_rupees": "A single side hitting this also ends the season immediately.",
+    "verification": "'manual' = a vote counts only after you approve it in /admin (safe, recommended). 'auto' = a vote counts the moment someone submits a UTR (frictionless, but people can lie).",
+    "admin_token": "Password for /admin. Change this."
+  }
+}

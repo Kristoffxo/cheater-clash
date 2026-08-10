@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cheat Clash — Who Cheats More?</title>
+<meta name="description" content="Men vs Women. ₹1 = 1 point. Put your money where your mouth is.">
+<meta name="theme-color" content="#07050d">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💔</text></svg>">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<header class="top">
+  <div class="brand">
+    <span class="mark">💔</span>
+    <span class="wordmark">CHEAT<em>CLASH</em></span>
+  </div>
+  <div class="top-right">
+    <div class="season-chip" id="seasonChip">SEASON —</div>
+    <button class="icon-btn" id="soundBtn" title="Sound" aria-label="Toggle sound">🔊</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ───────────────────────── hero ───────────────────────── -->
+  <section class="hero">
+    <p class="kicker">THE ETERNAL ARGUMENT, SETTLED WITH MONEY</p>
+    <h1 class="headline">
+      <span class="line">WHO CHEATS</span>
+      <span class="line big">MORE<span class="qm">?</span></span>
+    </h1>
+    <p class="sub">₹1 = 1 point. No opinions, only receipts.<br>
+      First side to <b>₹10,000</b> wins the season.</p>
+
+    <div class="countdown" id="countdown">
+      <div class="cd"><b id="cdD">--</b><span>days</span></div>
+      <div class="cd"><b id="cdH">--</b><span>hrs</span></div>
+      <div class="cd"><b id="cdM">--</b><span>min</span></div>
+      <div class="cd"><b id="cdS">--</b><span>sec</span></div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── the war bar ───────────────────────── -->
+  <section class="arena" id="arena">
+    <div class="scoreline">
+      <div class="score men">
+        <span class="score-label">MEN</span>
+        <span class="score-num" id="menScore">₹0</span>
+        <span class="score-pct" id="menPct">50%</span>
+      </div>
+      <div class="vs">VS</div>
+      <div class="score women">
+        <span class="score-pct" id="womenPct">50%</span>
+        <span class="score-num" id="womenScore">₹0</span>
+        <span class="score-label">WOMEN</span>
+      </div>
+    </div>
+
+    <div class="warbar" id="warbar">
+      <div class="fill men" id="menFill"></div>
+      <div class="fill women" id="womenFill"></div>
+      <div class="knot" id="knot"><span>⚡</span></div>
+      <div class="warbar-shine"></div>
+    </div>
+
+    <div class="cap">
+      <div class="cap-track"><div class="cap-fill" id="capFill"></div></div>
+      <div class="cap-text">
+        <span id="capText">₹0 of ₹10,000 in the pot</span>
+        <span class="cap-note" id="capNote">the season ends the second this fills</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── pick a side ───────────────────────── -->
+  <section class="picks">
+    <button class="pick men" data-side="men">
+      <div class="pick-glow"></div>
+      <div class="pick-emoji">🕺</div>
+      <h2>MEN</h2>
+      <p class="pick-tag" id="menTag">Back the boys</p>
+      <div class="pick-bar"><i id="menMini"></i></div>
+      <div class="pick-cta">BACK THIS SIDE <span>→</span></div>
+    </button>
+
+    <div class="ampersand">or</div>
+
+    <button class="pick women" data-side="women">
+      <div class="pick-glow"></div>
+      <div class="pick-emoji">💃</div>
+      <h2>WOMEN</h2>
+      <p class="pick-tag" id="womenTag">Back the girls</p>
+      <div class="pick-bar"><i id="womenMini"></i></div>
+      <div class="pick-cta">BACK THIS SIDE <span>→</span></div>
+    </button>
+  </section>
+
+  <!-- ───────────────────────── ticker ───────────────────────── -->
+  <section class="ticker-wrap" id="tickerWrap">
+    <div class="ticker" id="ticker"></div>
+  </section>
+
+  <!-- ───────────────────────── boards ───────────────────────── -->
+  <section class="boards">
+    <div class="card">
+      <h3>🏆 Biggest Believers</h3>
+      <ol class="board" id="topBoard"><li class="empty">Nobody yet. Be the first.</li></ol>
+    </div>
+    <div class="card">
+      <h3>📜 Hall of Seasons</h3>
+      <ol class="board history" id="historyBoard"><li class="empty">Season 1 is the first ever.</li></ol>
+    </div>
+  </section>
+
+  <section class="how">
+    <h3>How it works</h3>
+    <div class="steps">
+      <div class="step"><b>1</b><p>Pick a side. Men or women. No fence-sitting.</p></div>
+      <div class="step"><b>2</b><p>Pay ₹1 per point over UPI. ₹50 = 50 points.</p></div>
+      <div class="step"><b>3</b><p>Your points land on the bar the moment they clear.</p></div>
+      <div class="step"><b>4</b><p>₹10,000 in the pot ends it. Winner takes the bragging rights.</p></div>
+      <div class="step"><b>5</b><p>Every 30 days the board wipes and we go again.</p></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p><b>This is a joke poll, not a survey and not a game of skill or chance.</b> There is no prize,
+     no payout and no refund — you are paying for a number to move on a bar and for the right to
+     be smug about it. Nothing here is data about real people.</p>
+  <p class="muted">Payments go to <span id="footUpi">—</span> · Hard cap ₹10,000 per season · Resets every 30 days</p>
+</footer>
+
+<!-- ───────────────────────── pay sheet ───────────────────────── -->
+<div class="sheet-scrim" id="scrim" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
+
+    <!-- step 1: amount -->
+    <div class="step-pane" id="paneAmount">
+      <div class="sheet-side" id="sheetSide">MEN</div>
+      <h2 id="sheetTitle">How many points?</h2>
+      <p class="sheet-sub">₹1 buys 1 point. <span id="roomNote"></span></p>
+
+      <div class="chips" id="chips"></div>
+
+      <label class="field">
+        <span>Custom amount</span>
+        <div class="rupee"><i>₹</i><input type="number" id="amtInput" min="1" step="1" inputmode="numeric"></div>
+      </label>
+
+      <label class="field">
+        <span>Name on the leaderboard <em>(optional)</em></span>
+        <input type="text" id="nameInput" maxlength="18" placeholder="Anonymous" autocomplete="off">
+      </label>
+
+      <button class="primary" id="goPay">CONTINUE →</button>
+      <p class="fineprint">No refunds. No prize. Purely for the bragging rights.</p>
+    </div>
+
+    <!-- step 2: pay -->
+    <div class="step-pane" id="panePay" hidden>
+      <h2>Pay <span id="payAmt">₹0</span></h2>
+      <p class="sheet-sub">to <b id="payUpi">—</b> · ref <code id="payRef">—</code></p>
+
+      <div class="qr-box"><div id="qr"></div></div>
+
+      <a class="primary" id="upiLink" href="#">OPEN UPI APP</a>
+      <button class="ghost" id="copyUpi">Copy UPI ID</button>
+
+      <div class="divider"><span>then</span></div>
+
+      <label class="field">
+        <span>Paste the UPI reference / UTR from your app</span>
+        <input type="text" id="utrInput" placeholder="e.g. 418329274611" autocomplete="off" inputmode="numeric">
+      </label>
+      <button class="primary alt" id="confirmPay">I'VE PAID — COUNT MY POINTS</button>
+      <p class="fineprint" id="verifyNote"></p>
+    </div>
+
+    <!-- step 3: done -->
+    <div class="step-pane center" id="paneDone" hidden>
+      <div class="done-emoji">🎉</div>
+      <h2 id="doneTitle">Points locked in</h2>
+      <p class="sheet-sub" id="doneMsg"></p>
+      <button class="primary" id="doneBtn">BACK TO THE FIGHT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────── winner takeover ───────────────────────── -->
+<div class="winner-scrim" id="winnerScrim" hidden>
+  <div class="winner">
+    <p class="winner-kicker" id="winnerKicker">SEASON 1 · FINAL</p>
+    <h2 class="winner-title" id="winnerTitle">WOMEN</h2>
+    <p class="winner-sub" id="winnerSub"></p>
+    <div class="winner-score" id="winnerScore"></div>
+    <p class="winner-next" id="winnerNext"></p>
+    <button class="ghost" id="winnerClose">See the final board</button>
+  </div>
+</div>
+
+<script src="/qr.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

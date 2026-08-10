@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheat Clash — Admin</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔑</text></svg>">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    background:#07050d;color:#f6f2ff;padding:28px 20px 80px;line-height:1.5;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  h1{font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:4px}
+  .sub{font-size:12.5px;color:rgba(246,242,255,.45);margin-bottom:24px}
+  .gate{max-width:340px;margin:14vh auto 0;text-align:center}
+  input,button{font-family:inherit;font-size:14px}
+  input{
+    width:100%;padding:13px 15px;border-radius:12px;border:1px solid rgba(246,242,255,.14);
+    background:rgba(0,0,0,.4);color:#f6f2ff;font-weight:600;
+  }
+  input:focus{outline:none;border-color:rgba(246,242,255,.45)}
+  .btn{
+    padding:13px 18px;border-radius:12px;border:none;cursor:pointer;font-weight:800;
+    font-size:12px;letter-spacing:.08em;background:#f6f2ff;color:#07050d;transition:.2s;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn.full{width:100%;margin-top:12px}
+  .btn.ok{background:#34d399}
+  .btn.no{background:#fb7185}
+  .btn.mid{background:#fbbf24}
+  .btn.quiet{background:transparent;color:rgba(246,242,255,.5);border:1px solid rgba(246,242,255,.14)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:26px}
+  .stat{background:rgba(255,255,255,.05);border:1px solid rgba(246,242,255,.12);border-radius:16px;padding:15px}
+  .stat b{display:block;font-size:23px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .stat span{font-size:10px;letter-spacing:.14em;color:rgba(246,242,255,.4);font-weight:800}
+  .stat.men b{color:#38bdf8}.stat.women b{color:#fb7185}.stat.pot b{color:#fbbf24}
+  h2{font-size:13px;font-weight:900;letter-spacing:.06em;margin:26px 0 12px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    text-align:left;font-size:10px;letter-spacing:.12em;color:rgba(246,242,255,.4);
+    padding:8px 10px;border-bottom:1px solid rgba(246,242,255,.12);font-weight:800;
+  }
+  td{padding:11px 10px;border-bottom:1px solid rgba(246,242,255,.07);vertical-align:middle}
+  tr:hover td{background:rgba(255,255,255,.03)}
+  .utr{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#fbbf24;user-select:all}
+  .side{font-weight:900;font-size:11px;letter-spacing:.08em}
+  .side.men{color:#38bdf8}.side.women{color:#fb7185}
+  .amt{font-weight:900;font-variant-numeric:tabular-nums}
+  .pill{font-size:9.5px;font-weight:800;letter-spacing:.1em;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.1)}
+  .pill.refund{background:#fb7185;color:#07050d}
+  .pill.claimed{background:#fbbf24;color:#07050d}
+  .acts{display:flex;gap:6px;justify-content:flex-end}
+  .acts .btn{padding:7px 11px;font-size:10.5px}
+  .empty{text-align:center;color:rgba(246,242,255,.35);padding:40px 0;font-size:13px}
+  .danger{margin-top:44px;border-top:1px solid rgba(246,242,255,.12);padding-top:20px}
+  .danger p{font-size:11.5px;color:rgba(246,242,255,.4);margin-bottom:10px;max-width:560px}
+  .note{
+    background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:12px;
+    padding:12px 14px;font-size:12px;color:#fbbf24;margin-bottom:20px;
+  }
+  @media(max-width:620px){ th:nth-child(5),td:nth-child(5){display:none} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div id="gate" class="gate">
+    <h1>🔑 Admin</h1>
+    <p class="sub">Enter your admin token.</p>
+    <input type="password" id="tok" placeholder="admin token" autocomplete="off">
+    <button class="btn full" id="enter">UNLOCK</button>
+    <p class="sub" id="gateErr" style="color:#fb7185;margin-top:12px"></p>
+  </div>
+
+  <div id="panel" hidden>
+    <h1>Cheat Clash — Season <span id="seasonNo">—</span></h1>
+    <p class="sub">Approve a payment only after you've seen the money land in your UPI app. Approved points are the only ones that count.</p>
+
+    <div class="note" id="modeNote"></div>
+
+    <div class="stats">
+      <div class="stat men"><b id="sMen">₹0</b><span>MEN</span></div>
+      <div class="stat women"><b id="sWomen">₹0</b><span>WOMEN</span></div>
+      <div class="stat pot"><b id="sPot">₹0</b><span>IN THE POT</span></div>
+      <div class="stat"><b id="sLeft">₹0</b><span>ROOM LEFT</span></div>
+      <div class="stat"><b id="sQueue">0</b><span>AWAITING YOU</span></div>
+    </div>
+
+    <h2>Payment queue</h2>
+    <table>
+      <thead><tr><th>WHO</th><th>SIDE</th><th>AMOUNT</th><th>UTR</th><th>REF</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="empty" id="emptyMsg" hidden>Nothing waiting. Go and live your life.</p>
+
+    <div class="danger">
+      <h2>End the season early</h2>
+      <p>Closes this season immediately, files it in the Hall of Seasons, and opens the next one with a clean board. The 30-day clock restarts. This can't be undone.</p>
+      <button class="btn quiet" id="resetBtn">FORCE RESET SEASON</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var token = sessionStorage.getItem("cc_admin") || "";
+  var $ = function(id){ return document.getElementById(id); };
+  var rupee = function(n){ return "₹" + Number(n||0).toLocaleString("en-IN"); };
+
+  function api(path, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({ "X-Admin-Token": token, "Content-Type":"application/json" }, opts.headers||{});
+    return fetch(path, opts);
+  }
+
+  function unlock(){
+    token = $("tok").value.trim();
+    api("/api/admin/queue").then(function(r){
+      if(!r.ok){ $("gateErr").textContent = "Wrong token."; return; }
+      sessionStorage.setItem("cc_admin", token);
+      $("gate").hidden = true; $("panel").hidden = false;
+      load(); setInterval(load, 5000);
+    });
+  }
+  $("enter").onclick = unlock;
+  $("tok").onkeydown = function(e){ if(e.key === "Enter") unlock(); };
+
+  function load(){
+    api("/api/admin/queue").then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if(!d) return;
+      $("seasonNo").textContent = d.season + (d.status === "ended" ? " (ENDED)" : "");
+      $("sMen").textContent = rupee(d.men);
+      $("sWomen").textContent = rupee(d.women);
+      $("sPot").textContent = rupee(d.collected);
+      $("sLeft").textContent = rupee(Math.max(0, d.cap - d.collected));
+      var waiting = d.rows.filter(function(r){ return r.status === "claimed"; });
+      $("sQueue").textContent = waiting.length;
+
+      $("modeNote").textContent = d.verification === "auto"
+        ? "AUTO mode: a submitted UTR counts immediately without your approval. Anyone can type a fake number. Switch verification to \"manual\" in config.json if that matters."
+        : "MANUAL mode: nothing counts until you approve it below. Cross-check each UTR against your UPI app before approving.";
+
+      var rows = d.rows;
+      $("emptyMsg").hidden = rows.length > 0;
+      $("rows").innerHTML = rows.map(function(r){
+        var acts = r.status === "refund_due"
+          ? '<button class="btn mid" data-id="'+r.id+'" data-do="refunded">MARK REFUNDED</button>'
+          : '<button class="btn ok" data-id="'+r.id+'" data-do="approve">APPROVE</button>' +
+            '<button class="btn no" data-id="'+r.id+'" data-do="reject">REJECT</button>';
+        return '<tr>' +
+          '<td>' + esc(r.name) + ' <span class="pill ' + r.status + '">' + r.status.toUpperCase() + '</span></td>' +
+          '<td class="side ' + r.side + '">' + r.side.toUpperCase() + '</td>' +
+          '<td class="amt">' + rupee(r.amount) + '</td>' +
+          '<td class="utr">' + (r.utr ? esc(r.utr) : '—') + '</td>' +
+          '<td class="utr" style="color:rgba(246,242,255,.35)">' + r.id + '</td>' +
+          '<td><div class="acts">' + acts + '</div></td>' +
+          '</tr>';
+      }).join("");
+
+      $("rows").querySelectorAll("button[data-do]").forEach(function(b){
+        b.onclick = function(){
+          b.disabled = true;
+          api("/api/admin/decide", {
+            method:"POST",
+            body: JSON.stringify({ id: b.dataset.id, decision: b.dataset.do })
+          }).then(function(res){ return res.json(); }).then(function(out){
+            if(out.message) alert(out.message);
+            load();
+          });
+        };
+      });
+    });
+  }
+
+  $("resetBtn").onclick = function(){
+    if(!confirm("End this season now and start the next one?")) return;
+    api("/api/admin/reset", { method:"POST" }).then(load);
+  };
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  if(token){ $("tok").value = token; unlock(); }
+})();
+</script>
+</body>
+</html>
