@@ -9,7 +9,7 @@
    pace, so the read-modify-write on `season` is not a practical race. Creating an
    intent writes nothing to `season`, so the busy path has no contention at all. */
 
-import config from "../config.json";
+import config from "../clash.json";
 
 export const CAP = Number(config.total_cap_rupees) || 10000;
 export const SIDE_CAP = Number(config.side_cap_rupees) || 10000;

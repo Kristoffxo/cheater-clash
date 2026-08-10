@@ -53,7 +53,7 @@ Verified: the pot lands on exactly ₹10,000 and has no path to ₹10,001.
 A single side hitting ₹10,000 also ends it — though since the *total* is capped at
 ₹10,000 too, that can only happen if one side took the entire pot.
 
-Change any of it in `config.json`:
+Change any of it in `clash.json`:
 
 | key | meaning |
 |---|---|
@@ -78,7 +78,7 @@ app, but your website never finds out whether money arrived. So:
 
 Duplicate UTRs are rejected automatically, so the same reference can't be reused.
 
-Setting `verification: "auto"` in `config.json` skips your approval and counts points the
+Setting `verification: "auto"` in `clash.json` skips your approval and counts points the
 instant a UTR is submitted. It's frictionless and **people can and will type fake
 numbers.** Only use it if you genuinely don't mind.
 
@@ -117,7 +117,7 @@ stored in Cloudflare KV instead of a JSON file.
 
 3. **Settings → Environment variables** → add for Production
    - **`ADMIN_TOKEN`** = a long password you invent. **Encrypt it.**
-     This overrides the placeholder in `config.json`, so your real admin password is
+     This overrides the placeholder in `clash.json`, so your real admin password is
      never in the public repo.
    - Optional: `VERIFICATION` = `manual` (default) or `auto`
 
@@ -125,7 +125,7 @@ stored in Cloudflare KV instead of a JSON file.
 
 Then `https://<your-project>.pages.dev` is the live game and `/admin` is your queue.
 
-Both backends read the caps from the same `config.json`, so changing
+Both backends read the caps from the same `clash.json`, so changing
 `total_cap_rupees` there changes it in both places.
 
 **What's different on Cloudflare:** the page polls every 3 seconds instead of holding a
@@ -147,7 +147,7 @@ That prints an HTTPS link you can paste into a story. Your Mac has to stay awake
 server running. For something permanent, any small VPS or a container host will do —
 it's one Python file with no dependencies.
 
-**Before you share the link:** change `admin_token` in `config.json`. It defaults to a
+**Before you share the link:** change `admin_token` in `clash.json`. It defaults to a
 placeholder and it's the only thing standing between a stranger and your approve button.
 
 ---
@@ -168,7 +168,7 @@ placeholder and it's the only thing standing between a stranger and your approve
 
 ```
 server.py           API, cap enforcement, season rollover, live updates (SSE)
-config.json         UPI id, caps, season length, admin token
+clash.json          UPI id, caps, season length, admin token
 
 public/index.html   LANDING — the MEN / WOMEN split
 public/landing.css  the split, the seam, the lean-on-hover

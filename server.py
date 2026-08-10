@@ -46,7 +46,7 @@ _subs_lock = threading.Lock()
 # --------------------------------------------------------------------------
 
 def load_config():
-    with open(os.path.join(ROOT, "config.json"), "r", encoding="utf-8") as f:
+    with open(os.path.join(ROOT, "clash.json"), "r", encoding="utf-8") as f:
         cfg = json.load(f)
     cfg.pop("_notes", None)
     cfg["total_cap_rupees"] = int(cfg.get("total_cap_rupees", 10000))
@@ -645,7 +645,7 @@ def main():
     else:
         print("  mode    MANUAL - votes count only after you approve them in /admin")
     if str(CFG["admin_token"]).startswith("change-me"):
-        print("  ⚠  change admin_token in config.json before this goes public")
+        print("  ⚠  change admin_token in clash.json before this goes public")
     print("")
 
     srv = Server(("0.0.0.0", PORT), Handler)

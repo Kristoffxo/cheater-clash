@@ -4,3 +4,6 @@ data/
 
 # secrets
 .env
+
+# staged copy of functions/ for browser testing
+public/_cfcheck/

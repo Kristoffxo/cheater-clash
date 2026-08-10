@@ -139,7 +139,7 @@
       $("sQueue").textContent = waiting.length;
 
       $("modeNote").textContent = d.verification === "auto"
-        ? "AUTO mode: a submitted UTR counts immediately without your approval. Anyone can type a fake number. Switch verification to \"manual\" in config.json if that matters."
+        ? "AUTO mode: a submitted UTR counts immediately without your approval. Anyone can type a fake number. Switch verification to \"manual\" in clash.json if that matters."
         : "MANUAL mode: nothing counts until you approve it below. Cross-check each UTR against your UPI app before approving.";
 
       var rows = d.rows;
