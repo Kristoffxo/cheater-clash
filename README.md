@@ -119,15 +119,35 @@ placeholder and it's the only thing standing between a stranger and your approve
 ## Files
 
 ```
-server.py          API, cap enforcement, season rollover, live updates (SSE)
-config.json        UPI id, caps, season length, admin token
-public/index.html  the site
-public/style.css   all the styling
-public/app.js      live bar, pay flow, particles, sound
-public/qr.js       QR encoder, written from scratch — no dependencies
-public/admin.html  approval queue
-data/state.json    the live season (gitignored)
+server.py           API, cap enforcement, season rollover, live updates (SSE)
+config.json         UPI id, caps, season length, admin token
+
+public/index.html   LANDING — the MEN / WOMEN split
+public/landing.css  the split, the seam, the lean-on-hover
+public/landing.js   live numbers, particles, page-leave sweep
+
+public/vote.html    VOTE — scoreboard, war bar, pay sheet, leaderboards
+public/style.css    styling for the vote page
+public/app.js       live bar, pay flow, particles, sound
+public/qr.js        QR encoder, written from scratch — no dependencies
+
+public/admin.html   approval queue
+data/state.json     the live season (gitignored)
 ```
+
+### The two pages
+
+`/` is the landing: a full-screen diagonal split with **MEN / WOMEN** either side of a
+glowing slash. Hovering a side makes its half swell and drains the colour out of the
+other. Clicking sweeps that side's colour over the whole screen and lands on
+`/vote?side=men`, which opens the pay sheet with that side already chosen.
+
+`/vote` is the arena — live tug-of-war bar, ticker, leaderboard, Hall of Seasons. The
+brand mark in the corner goes back to the split.
+
+The seam between the halves is cut from the same polygon as the halves themselves rather
+than being a rotated bar, so it stays welded to the colour boundary at every screen
+size. If you change one clip-path, change the seam's to match.
 
 ---
 

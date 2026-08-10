@@ -434,5 +434,12 @@
     lastTotals = { men: s.men, women: s.women };
     render(s);
     connect();
+
+    // arrived from the landing page with a side already picked
+    var want = new URLSearchParams(location.search).get("side");
+    if ((want === "men" || want === "women") && s.status === "live" && s.headroom[want] > 0) {
+      setTimeout(function () { openSheet(want); }, 420);
+    }
+    if (want) history.replaceState({}, "", "/vote");
   });
 })();

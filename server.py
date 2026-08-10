@@ -531,6 +531,8 @@ class Handler(BaseHTTPRequestHandler):
 
         if route in ("/", "/index.html"):
             return self.serve_file("index.html")
+        if route in ("/vote", "/vote/"):
+            return self.serve_file("vote.html")
         if route in ("/admin", "/admin/"):
             return self.serve_file("admin.html")
 
