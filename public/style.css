@@ -438,7 +438,8 @@ footer .muted{margin-top:10px;opacity:.75}
   .boards{grid-template-columns:1fr}
   .scoreline{flex-direction:column;gap:6px}
   .score{width:100%;justify-content:space-between}
-  .score.women{flex-direction:row-reverse}
+  /* beats the desktop .score.women{justify-content:flex-end} */
+  .score.women{flex-direction:row-reverse;justify-content:space-between}
   .vs{display:none}
   .countdown{gap:6px}
   .cd{min-width:0;flex:1}
