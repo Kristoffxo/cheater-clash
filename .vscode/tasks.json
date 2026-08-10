@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Cheat Clash (real)",
+      "type": "shell",
+      "command": "python3 server.py",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "detail": "Starts the local server on http://localhost:8000"
+    },
+    {
+      "label": "Run Cheat Clash (demo, no money)",
+      "type": "shell",
+      "command": "python3 server.py --demo",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "detail": "Fake data, votes count instantly, real season untouched"
+    },
+    {
+      "label": "Push to GitHub (deploys to Cloudflare)",
+      "type": "shell",
+      "command": "git add -A && git commit -m \"${input:message}\" && git push",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "detail": "Commits everything and pushes. Cloudflare rebuilds on its own."
+    }
+  ],
+  "inputs": [
+    {
+      "id": "message",
+      "type": "promptString",
+      "description": "Commit message",
+      "default": "Update"
+    }
+  ]
+}
