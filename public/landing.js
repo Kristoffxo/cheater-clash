@@ -229,12 +229,31 @@
     })();
   }
 
-  fetch("/api/state").then(function (r) { return r.json(); }).then(function (s) {
-    drift = Date.now() - s.server_time * 1000;
-    last = { men: s.men, women: s.women };
-    render(s);
-    connect();
-  });
+  fetch("/api/state")
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function (s) {
+      drift = Date.now() - s.server_time * 1000;
+      last = { men: s.men, women: s.women };
+      render(s);
+      connect();
+    })
+    .catch(function (err) {
+      // Don't let a dead API look like a working page with zeroes on it.
+      if (!document.querySelector(".fatal")) {
+        var bar = document.createElement("div");
+        bar.className = "fatal";
+        bar.textContent = "The scoreboard isn't responding. Try again in a moment.";
+        document.body.appendChild(bar);
+      }
+      console.error(
+        "[cheat clash] /api/state failed:", err,
+        "\nOn the deployed site this usually means the CLASH KV binding is missing" +
+        " (Cloudflare → Settings → Functions → KV namespace bindings)."
+      );
+    });
 
   // bfcache: undo the leave animation if the user comes back
   addEventListener("pageshow", function () {

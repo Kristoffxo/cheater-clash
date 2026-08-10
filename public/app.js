@@ -336,15 +336,7 @@
         if (!r.ok) { flash($("goPay"), r.body.message || "Try a different amount."); return; }
         pending = r.body;
 
-        $("payAmt").textContent = rupee(pending.amount);
-        $("payUpi").textContent = pending.upi_id;
-        $("payRef").textContent = pending.id;
-        $("upiLink").href = pending.upi_uri;
-        try {
-          $("qr").innerHTML = QR.svg(pending.upi_uri, { scale: 5, quiet: 3 });
-        } catch (e) {
-          $("qr").innerHTML = '<p class="fineprint">Use the button below to open your UPI app.</p>';
-        }
+        renderPay(pending);
         $("verifyNote").textContent = state.demo
           ? "DEMO MODE — no money moves and your points are already on the board."
           : state.verification === "auto"
@@ -359,14 +351,77 @@
       });
   };
 
-  // ── step 2 → 3 ──
-  $("copyUpi").onclick = function () {
-    var btn = this;
-    navigator.clipboard.writeText(state.upi_id).then(function () {
-      btn.textContent = "Copied ✓";
-      setTimeout(function () { btn.textContent = "Copy UPI ID"; }, 1600);
-    }).catch(function () { btn.textContent = state.upi_id; });
+  // ── the pay step ──────────────────────────────────────────────
+  // upi:// only resolves on a phone. On a laptop there is no app registered
+  // for the scheme, so the button does nothing at all — which is why desktop
+  // gets the QR as the main path and never sees a dead button.
+  var IS_PHONE = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    (matchMedia("(pointer: coarse)").matches && innerWidth < 900);
+
+  var APP_SCHEMES = { gpay: "tez://upi/pay?", phonepe: "phonepe://pay?", paytm: "paytmmp://pay?" };
+
+  function renderPay(p) {
+    $("payAmt").textContent = rupee(p.amount);
+    $("mUpi").textContent = p.upi_id;
+    $("mAmt").textContent = rupee(p.amount);
+    $("payRef").textContent = p.id;
+
+    try {
+      $("qr").innerHTML = QR.svg(p.upi_uri, { scale: 5, quiet: 3 });
+    } catch (e) {
+      $("qr").innerHTML = '<p class="fineprint bad">Couldn\'t draw the QR — pay manually with the details below.</p>';
+    }
+
+    $("upiLink").href = p.upi_uri;
+    var qs = p.upi_uri.split("?")[1] || "";
+    document.querySelectorAll(".app-chip").forEach(function (a) {
+      a.href = APP_SCHEMES[a.dataset.app] + qs;
+    });
+
+    $("payOnPhone").hidden = !IS_PHONE;
+    $("payOnDesktop").hidden = IS_PHONE;
+    $("showQrToggle").hidden = !IS_PHONE;
+    $("deadLinkHint").hidden = true;
+    $("payLead").textContent = IS_PHONE
+      ? "Tap to open your UPI app — the amount is already filled in."
+      : "Scan the code with any UPI app on your phone.";
+  }
+
+  // If the app never opened, the page stays visible. Say so instead of
+  // leaving someone staring at a button that did nothing.
+  function watchForDeadLink() {
+    var t = setTimeout(function () {
+      if (!document.hidden) $("deadLinkHint").hidden = false;
+    }, 1500);
+    var stop = function () {
+      clearTimeout(t);
+      document.removeEventListener("visibilitychange", stop);
+    };
+    document.addEventListener("visibilitychange", stop);
+  }
+  $("upiLink").addEventListener("click", watchForDeadLink);
+  document.querySelectorAll(".app-chip").forEach(function (a) {
+    a.addEventListener("click", watchForDeadLink);
+  });
+
+  $("showQrToggle").onclick = function () {
+    var hidden = $("payOnDesktop").hidden;
+    $("payOnDesktop").hidden = !hidden;
+    this.textContent = hidden ? "Hide QR code" : "Show QR code instead";
   };
+
+  document.querySelectorAll(".m-copy").forEach(function (b) {
+    b.onclick = function () {
+      var what = b.dataset.copy;
+      var text = what === "upi" ? $("mUpi").textContent
+        : what === "amt" ? String(pending ? pending.amount : "")
+        : $("payRef").textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        b.textContent = "Copied ✓";
+        setTimeout(function () { b.textContent = "Copy"; }, 1600);
+      }).catch(function () { b.textContent = "Select it"; });
+    };
+  });
 
   $("confirmPay").onclick = function () {
     var btn = this, utr = $("utrInput").value.trim();
@@ -432,17 +487,41 @@
     })();
   }
 
-  fetch("/api/state").then(function (r) { return r.json(); }).then(function (s) {
-    drift = Date.now() - s.server_time * 1000;
-    lastTotals = { men: s.men, women: s.women };
-    render(s);
-    connect();
+  function fatal(msg) {
+    if (document.querySelector(".fatal")) return;
+    var bar = document.createElement("div");
+    bar.className = "fatal";
+    bar.textContent = msg;
+    document.body.appendChild(bar);
+  }
 
-    // arrived from the landing page with a side already picked
-    var want = new URLSearchParams(location.search).get("side");
-    if ((want === "men" || want === "women") && s.status === "live" && s.headroom[want] > 0) {
-      setTimeout(function () { openSheet(want); }, 420);
-    }
-    if (want) history.replaceState({}, "", "/vote");
-  });
+  fetch("/api/state")
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function (s) {
+      drift = Date.now() - s.server_time * 1000;
+      lastTotals = { men: s.men, women: s.women };
+      render(s);
+      connect();
+
+      // arrived from the landing page with a side already picked
+      var want = new URLSearchParams(location.search).get("side");
+      if ((want === "men" || want === "women") && s.status === "live" && s.headroom[want] > 0) {
+        setTimeout(function () { openSheet(want); }, 420);
+      }
+      if (want) history.replaceState({}, "", "/vote");
+    })
+    .catch(function (err) {
+      // Failing silently here looks exactly like "nothing happens when I
+      // click" — the page sits at ₹0 with buttons that do nothing. Say it.
+      fatal("The scoreboard isn't responding. Try again in a moment.");
+      document.querySelectorAll(".pick").forEach(function (b) { b.disabled = true; });
+      console.error(
+        "[cheat clash] /api/state failed:", err,
+        "\nOn the deployed site this usually means the CLASH KV binding is missing" +
+        " (Cloudflare → Settings → Functions → KV namespace bindings)."
+      );
+    });
 })();

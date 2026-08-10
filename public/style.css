@@ -414,6 +414,61 @@ footer .muted{margin-top:10px;opacity:.75}
 .fineprint.warn{color:#fbbf24}
 .fineprint.bad{color:#fb7185}
 
+/* ── pay step ───────────────────────────────────────────── */
+.pay-block{margin-top:4px}
+
+.app-row{display:flex;gap:8px;margin-top:10px}
+.app-chip{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 6px;border-radius:13px;text-decoration:none;
+  border:1px solid var(--line);background:rgba(255,255,255,.06);
+  color:var(--paper);font-size:11.5px;font-weight:800;letter-spacing:.02em;
+  transition:.2s;
+}
+.app-chip:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+.app-chip b{
+  width:19px;height:19px;border-radius:6px;display:grid;place-items:center;
+  font-size:10px;font-weight:900;background:var(--women-grad);color:#fff;
+}
+.app-chip[data-app="gpay"] b{background:linear-gradient(135deg,#4285f4,#34a853)}
+.app-chip[data-app="phonepe"] b{background:#5f259f}
+.app-chip[data-app="paytm"] b{background:linear-gradient(135deg,#00baf2,#012970)}
+
+.scan-hint{
+  font-size:12px;color:var(--dim);line-height:1.6;text-align:center;
+  margin-top:12px;padding:0 4px;
+}
+.scan-hint b{color:var(--paper);font-weight:800}
+
+.manual{
+  margin-top:18px;border:1px solid var(--line);border-radius:16px;
+  background:rgba(0,0,0,.32);overflow:hidden;
+}
+.m-row{
+  display:flex;align-items:center;gap:10px;padding:11px 13px;
+  border-bottom:1px solid var(--line);
+}
+.m-row:last-child{border-bottom:none}
+.m-label{
+  font-size:9.5px;font-weight:800;letter-spacing:.14em;color:var(--dimmer);
+  flex:none;width:74px;text-transform:uppercase;
+}
+.m-val{
+  flex:1;min-width:0;font-size:14px;font-weight:800;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:all;
+}
+.m-val.ref{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11.5px;font-weight:600;color:var(--dim);
+}
+.m-copy{
+  flex:none;padding:6px 12px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.07);
+  color:var(--dim);font-family:inherit;font-size:10.5px;font-weight:800;
+  letter-spacing:.06em;transition:.2s;
+}
+.m-copy:hover{background:#fff;color:#07050d;border-color:#fff}
+
 .qr-box{display:grid;place-items:center;margin:20px 0 4px}
 .qr-box svg{border-radius:14px;width:min(184px,58vw);height:auto;box-shadow:0 12px 36px -10px rgba(0,0,0,.8)}
 .divider{display:flex;align-items:center;gap:12px;margin:22px 0 4px;color:var(--dimmer);font-size:10px;font-weight:800;letter-spacing:.18em}
@@ -460,9 +515,25 @@ footer .muted{margin-top:10px;opacity:.75}
 @media (max-width:420px){
   .cd b{font-size:19px}
   .chip{flex:1 1 44px;font-size:13px;padding:11px 4px}
+  /* let the UPI id show in full rather than ellipsing */
+  .m-label{width:56px;font-size:9px}
+  .m-val{font-size:12.5px;white-space:normal;word-break:break-all}
+  .m-copy{padding:6px 9px}
+  .app-chip{font-size:10.5px;padding:10px 4px;gap:5px}
 }
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .ticker{animation:none}
+}
+
+/* shown when /api/state can't be reached — a dead API must never look
+   like a working page that happens to show zeroes */
+.fatal{
+  position:fixed;left:50%;bottom:18px;translate:-50% 0;z-index:99;
+  max-width:min(440px,calc(100vw - 28px));
+  padding:12px 18px;border-radius:14px;text-align:center;
+  background:#e11d48;color:#fff;
+  font-size:12.5px;font-weight:800;line-height:1.5;
+  box-shadow:0 16px 40px -12px rgba(225,29,72,.8);
 }

@@ -168,12 +168,50 @@
     <!-- step 2: pay -->
     <div class="step-pane" id="panePay" hidden>
       <h2>Pay <span id="payAmt">₹0</span></h2>
-      <p class="sheet-sub">to <b id="payUpi">—</b> · ref <code id="payRef">—</code></p>
+      <p class="sheet-sub" id="payLead">Scan with any UPI app on your phone.</p>
 
-      <div class="qr-box"><div id="qr"></div></div>
+      <!-- phones: open the app directly -->
+      <div class="pay-block" id="payOnPhone" hidden>
+        <a class="primary" id="upiLink" href="#">OPEN UPI APP</a>
+        <div class="app-row">
+          <a class="app-chip" data-app="gpay" href="#"><b>G</b>GPay</a>
+          <a class="app-chip" data-app="phonepe" href="#"><b>P</b>PhonePe</a>
+          <a class="app-chip" data-app="paytm" href="#"><b>₹</b>Paytm</a>
+        </div>
+        <p class="fineprint" id="deadLinkHint" hidden>
+          Nothing opened? Use the details below and pay manually.
+        </p>
+      </div>
 
-      <a class="primary" id="upiLink" href="#">OPEN UPI APP</a>
-      <button class="ghost" id="copyUpi">Copy UPI ID</button>
+      <!-- desktop: the QR is the only thing that works -->
+      <div class="pay-block" id="payOnDesktop" hidden>
+        <div class="qr-box"><div id="qr"></div></div>
+        <p class="scan-hint">
+          Open <b>GPay, PhonePe, Paytm</b> or any bank app on your phone,
+          tap <b>Scan QR</b>, and point it here. The amount is already filled in.
+        </p>
+      </div>
+
+      <!-- always available: pay by hand -->
+      <div class="manual">
+        <div class="m-row">
+          <span class="m-label">UPI ID</span>
+          <b class="m-val" id="mUpi">—</b>
+          <button class="m-copy" data-copy="upi">Copy</button>
+        </div>
+        <div class="m-row">
+          <span class="m-label">Amount</span>
+          <b class="m-val" id="mAmt">—</b>
+          <button class="m-copy" data-copy="amt">Copy</button>
+        </div>
+        <div class="m-row">
+          <span class="m-label">Reference</span>
+          <b class="m-val ref" id="payRef">—</b>
+          <button class="m-copy" data-copy="ref">Copy</button>
+        </div>
+      </div>
+
+      <button class="ghost" id="showQrToggle" hidden>Show QR code instead</button>
 
       <div class="divider"><span>then</span></div>
 

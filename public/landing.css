@@ -330,3 +330,14 @@ body.leaving.to-women .side-bg.men{clip-path:polygon(0 0,0 0,0 100%,0 100%)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* shown when /api/state can't be reached — a dead API must never look
+   like a working page that happens to show zeroes */
+.fatal{
+  position:fixed;left:50%;bottom:18px;translate:-50% 0;z-index:99;
+  max-width:min(440px,calc(100vw - 28px));
+  padding:12px 18px;border-radius:14px;text-align:center;
+  background:#e11d48;color:#fff;
+  font-size:12.5px;font-weight:800;line-height:1.5;
+  box-shadow:0 16px 40px -12px rgba(225,29,72,.8);
+}
