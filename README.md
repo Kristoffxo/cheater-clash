@@ -9,18 +9,28 @@ Python 3 standard library only — nothing to install.
 
 ## Run it
 
+The folder lives on your Desktop. **Double-click a launcher — no terminal needed:**
+
+- **`Start Cheat Clash.command`** — the real thing. Points count only once you approve them.
+- **`Try It (Demo, No Money).command`** — fake data, votes count instantly, your real
+  season is untouched. Use this to show people.
+
+Either one starts the server and opens your browser. Close the Terminal window to stop it.
+If port 8000 is busy it quietly moves to 8001, 8002, and so on.
+
+> The first time you double-click, macOS may say it's from an unidentified developer.
+> Right-click the file → **Open** → **Open**. You only have to do that once per file.
+
+From a terminal instead:
+
 ```bash
-python3 server.py
+cd ~/Desktop/cheat-clash && python3 server.py
 ```
 
 - Site → http://localhost:8000
 - Admin → http://localhost:8000/admin
 
-Want to play with the UI without money changing hands:
-
-```bash
-python3 server.py --demo
-```
+Add `--demo` for the no-money version.
 
 Demo mode counts every vote instantly, writes to a separate `data/demo-state.json`, and
 never touches your real season. Other flags: `--port 9000`, `--verbose`.
