@@ -97,7 +97,45 @@ Wise can't do this job: Wise has no INR receiving account, so it cannot accept U
 
 ---
 
-## Putting it on the internet
+## Deploying to Cloudflare Pages
+
+The site runs on Cloudflare with no server of your own. `public/` is served as static
+files and `functions/` becomes the API — same rules, same ₹10,000 cap, with the season
+stored in Cloudflare KV instead of a JSON file.
+
+**In the Cloudflare dashboard, on your Pages project:**
+
+1. **Settings → Build & deployments**
+   - Build command: *leave empty*
+   - Build output directory: **`public`**
+   - Root directory: `/`
+
+2. **Settings → Functions → KV namespace bindings** → *Add binding*
+   - Variable name: **`CLASH`** (exactly this)
+   - KV namespace: create one called `cheat-clash` and pick it
+   - Do this for **both** Production and Preview
+
+3. **Settings → Environment variables** → add for Production
+   - **`ADMIN_TOKEN`** = a long password you invent. **Encrypt it.**
+     This overrides the placeholder in `config.json`, so your real admin password is
+     never in the public repo.
+   - Optional: `VERIFICATION` = `manual` (default) or `auto`
+
+4. **Deployments → Retry deployment**
+
+Then `https://<your-project>.pages.dev` is the live game and `/admin` is your queue.
+
+Both backends read the caps from the same `config.json`, so changing
+`total_cap_rupees` there changes it in both places.
+
+**What's different on Cloudflare:** the page polls every 3 seconds instead of holding a
+live stream open (Functions can't keep connections open). KV is also eventually
+consistent — approvals are the only thing that moves money and they come from one person
+at human pace, so it isn't a practical problem, but don't hammer the approve button.
+
+---
+
+## Putting it on the internet (from your own Mac instead)
 
 Fastest, free, no signup:
 

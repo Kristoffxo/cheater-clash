@@ -214,16 +214,19 @@
       String(s % 60).padStart(2, "0");
   }, 250);
 
+  // Polling, not SSE: Cloudflare Functions can't hold a connection open.
+  // Works against the Python server too, which serves the same /api/state.
   function connect() {
-    var es = new EventSource("/api/stream");
-    es.onmessage = function (e) {
-      try {
-        var s = JSON.parse(e.data);
-        drift = Date.now() - s.server_time * 1000;
-        render(s);
-      } catch (err) { /* ignore a malformed frame */ }
-    };
-    es.onerror = function () { es.close(); setTimeout(connect, 3000); };
+    (function poll() {
+      fetch("/api/state", { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (s) {
+          drift = Date.now() - s.server_time * 1000;
+          render(s);
+        })
+        .catch(function () { /* offline — try again next tick */ })
+        .then(function () { setTimeout(poll, document.hidden ? 15000 : 3000); });
+    })();
   }
 
   fetch("/api/state").then(function (r) { return r.json(); }).then(function (s) {
